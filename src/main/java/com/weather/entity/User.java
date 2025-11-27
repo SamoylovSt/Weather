@@ -3,6 +3,9 @@ package com.weather.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
@@ -22,5 +25,10 @@ public class User {
     @Column(name = "password", nullable = false, length = 30)
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Location> locations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Session> sessions = new ArrayList<>();
 
 }

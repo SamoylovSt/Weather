@@ -6,7 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "location")
+@Table(name = "locations")
 @Getter
 @Setter
 @ToString
@@ -23,7 +23,7 @@ public class Location {
     private String name;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User userId;
+    private User user;
     @Column(name = "latitude")
     private BigDecimal latitude;
     @Column(name = "longitude")

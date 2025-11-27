@@ -1,5 +1,6 @@
 package com.weather.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import javax.sql.DataSource;
 
+@Slf4j
 @Configuration
 @ComponentScan("com.weather")
 @EnableWebMvc
@@ -65,22 +67,25 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public Flyway flyway() {
+    public Flyway flyway(DataSource dataSource) {
         Flyway flyway = Flyway.configure()
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .locations("classpath:db/migration")
                 .baselineOnMigrate(true)
+                .baselineVersion("0")
+                .validateOnMigrate(true)
+                .outOfOrder(false)
+                .cleanOnValidationError(false)
                 .load();
 
-        System.out.println("=== Starting Flyway Migration ===");
+        log.info("Запуск Flyway Migration...");
         try {
             flyway.migrate();
-            System.out.println("=== Flyway Migration Complete ===");
+            log.info("Миграции успешно выполнены");
         } catch (Exception e) {
-            System.out.println("=== Flyway Error ===");
-            e.printStackTrace();
+            log.error("Ошибка выполнения миграций: {}", e.getMessage());
+            throw new RuntimeException("Ошибка миграции БД", e);
         }
-        // TODO логирование сделать
         return flyway;
     }
 

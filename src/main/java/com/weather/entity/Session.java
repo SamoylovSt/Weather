@@ -10,9 +10,12 @@ import java.util.UUID;
 
 public class Session {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
-    private int userId;
-    private Date datetime;
-// TODO бля
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    @Column(name = "expires_at")
+    private Date ExpiresAt;
+
 }
