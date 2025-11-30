@@ -2,7 +2,7 @@ package com.weather.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +16,7 @@ public class Session {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @Column(name = "expires_at")
-    private Date ExpiresAt;
+    private LocalDate expiresAt;
+    //TODO повторить про @ManyToOne
 
 }

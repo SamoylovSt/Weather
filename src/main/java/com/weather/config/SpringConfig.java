@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -64,6 +65,7 @@ public class SpringConfig implements WebMvcConfigurer {
         dataSource.setPassword("postgres");
         dataSource.setDriverClassName("org.postgresql.Driver");
         return dataSource;
+        //TODO поменять чтобы данные подставлялись из проперти
     }
 
     @Bean
@@ -88,6 +90,9 @@ public class SpringConfig implements WebMvcConfigurer {
         }
         return flyway;
     }
-
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
 }
