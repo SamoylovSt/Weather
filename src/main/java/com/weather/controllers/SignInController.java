@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SignInController {
 
     @GetMapping("/sign-in")
-    public String ss() {
+    public String showSignIn() {
         return "sign-in";
     }
 

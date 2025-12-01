@@ -5,15 +5,16 @@ import jakarta.validation.constraints.Size;
 
 public class RegistrationForm {
 
-    @NotBlank(message="Имя пользователя не может быть пустым")
-    @Size(min=3, max = 20, message = "Имя пользователя от 3-х до 20-ти символов")
+    @NotBlank(message = "The user name cannot be empty.")
+    @Size(min = 3, max = 20, message = "Username from 3 to 20 characters")
     private String username;
 
-    @NotBlank(message="Имя пользователя не может быть пустым")
-    @Size(min = 6,message = "Пароль не менее 6-ти символов")
+    @NotBlank(message = "Password from 3 to 20 characters")
+    @Size(min = 6, message = "The password must be at least 6 characters long")
     private String password;
 
-    @NotBlank(message = "Повторите пароль")
+    @NotBlank(message = "Repeat the password")
+    @Size(min = 6, message = "The password must be at least 6 characters long")
     private String repeatPassword;
 
     public String getUsername() {
