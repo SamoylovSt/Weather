@@ -1,10 +1,13 @@
 package com.weather.controllers;
 
+import com.weather.dao.UserDaoImpl;
+import com.weather.service.UserService;
 import com.weather.validation.RegistrationForm;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +20,8 @@ import java.util.UUID;
 
 @Controller
 public class SignUpController {
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/sign-up")
     public String showSignup() {
@@ -29,9 +34,14 @@ public class SignUpController {
                                Model model,
                                HttpServletResponse response,
                                HttpServletRequest request) {
+        String username = form.getUsername();
         String mySessionId = UUID.randomUUID().toString();
         Cookie myCookie = new Cookie("session", mySessionId);
-//TODO остановился на куки и сессии
+
+        if (userService.existByUsername(username)) {
+            model.addAttribute("errorMessage", "User already exist");
+            return "sign-up-with-errors";
+        }
         if (bindingResult.hasErrors()) {
             ObjectError error = bindingResult.getAllErrors().get(0);
             if (error != null) {
@@ -40,6 +50,9 @@ public class SignUpController {
                 return "sign-up-with-errors";
             }
         }
+
+
+
         return "sign-up";
     }
 }

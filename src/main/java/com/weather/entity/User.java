@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "passwordHash")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
@@ -22,7 +22,7 @@ public class User {
     private int id;
     @Column(name = "login", nullable = false, length = 30, unique = true)
     private String login;
-    @Column(name = "password", nullable = false, length = 30)
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

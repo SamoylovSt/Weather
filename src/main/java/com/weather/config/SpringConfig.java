@@ -97,6 +97,7 @@ public class SpringConfig implements WebMvcConfigurer {
         return new LocalValidatorFactoryBean();
     }
 
+    //TODO убрать
     @Bean
     public CharacterEncodingFilter characterEncodingFilter() {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
