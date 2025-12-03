@@ -3,13 +3,14 @@ package com.weather.validation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@PasswordMatch
 public class RegistrationForm {
 
     @NotBlank(message = "The user name cannot be empty.")
     @Size(min = 3, max = 20, message = "Username from 3 to 20 characters")
     private String username;
 
-    @NotBlank(message = "Password from 3 to 20 characters")
+    @NotBlank(message = "The password cannot be empty.")
     @Size(min = 6, message = "The password must be at least 6 characters long")
     private String password;
 

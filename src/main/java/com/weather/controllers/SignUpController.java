@@ -1,6 +1,6 @@
 package com.weather.controllers;
 
-import com.weather.dao.UserDaoImpl;
+import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.validation.RegistrationForm;
 import jakarta.servlet.http.Cookie;
@@ -22,6 +22,8 @@ import java.util.UUID;
 public class SignUpController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SessionService sessionService;
 
     @GetMapping("/sign-up")
     public String showSignup() {
@@ -32,16 +34,12 @@ public class SignUpController {
     public String registerUser(@Valid RegistrationForm form,
                                BindingResult bindingResult,
                                Model model,
-                               HttpServletResponse response,
-                               HttpServletRequest request) {
+                               HttpServletResponse response) {
         String username = form.getUsername();
-        String mySessionId = UUID.randomUUID().toString();
-        Cookie myCookie = new Cookie("session", mySessionId);
-
-        if (userService.existByUsername(username)) {
-            model.addAttribute("errorMessage", "User already exist");
-            return "sign-up-with-errors";
-        }
+        String sessionId = UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("session", sessionId);
+        // что ещё добавить в куку?
+        //TODO настроить удаление сессии по истечению
         if (bindingResult.hasErrors()) {
             ObjectError error = bindingResult.getAllErrors().get(0);
             if (error != null) {
@@ -50,12 +48,12 @@ public class SignUpController {
                 return "sign-up-with-errors";
             }
         }
-
-
-
+        if (userService.existByUsername(username)) {
+            model.addAttribute("errorMessage", "User already exist");
+            return "sign-up-with-errors";
+        }
+        response.addCookie(cookie);
+        userService.createUser(username, form.getPassword(), sessionId);//регистрацию в трайкетч?
         return "sign-up";
     }
 }
-
-
-//TODO спросить правильно ли делаю валидацию

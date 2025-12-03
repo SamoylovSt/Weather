@@ -4,10 +4,9 @@ import com.weather.entity.User;
 
 import java.util.Optional;
 
-public interface UserDao<E,I,S> {
-    void save(E user);
-    Optional<User> findById(I id);
-    Optional<User> findByUsername(S username);
-    boolean existByUsername(S username);
-    //TODO учусь работать с Optional<User>
+public interface UserDao {
+    void save(User user);
+    Optional<User> findById(int id);
+    Optional<User> findByUsername(String username);
+    boolean existByUsername(String username);
 }

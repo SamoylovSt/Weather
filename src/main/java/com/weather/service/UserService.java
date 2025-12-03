@@ -1,17 +1,23 @@
 package com.weather.service;
 
-import com.weather.dao.UserDaoImpl;
+import com.weather.dao.SessionDao;
+import com.weather.dao.UserDao;
+import com.weather.entity.Session;
 import com.weather.entity.User;
 import com.weather.util.BCyptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao userDao;
+    @Autowired
+    private SessionService sessionService;
 
     @Autowired
     private BCyptPasswordEncoder encoder;
@@ -24,7 +30,7 @@ public class UserService {
         return userDao.existByUsername(name);
     }
 
-    public void registerUser(String name, String password) {
+    public void createUser(String name, String password, String sessionId) {
         if (userDao.existByUsername(name)) {
             throw new RuntimeException("User already exist" + name);
         }
@@ -33,6 +39,7 @@ public class UserService {
         userForSave.setLogin(name);
         userForSave.setPassword(encodePassword);
         userDao.save(userForSave);
+        sessionService.createSession(userForSave, sessionId);
     }
 
     public boolean authenticate(String name, String password) {
