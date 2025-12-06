@@ -4,7 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BCyptPasswordEncoder {
+public class BCryptPasswordEncoder {
 
     public String encode(String rawPassword) {
         return BCrypt.hashpw(rawPassword, BCrypt.gensalt());

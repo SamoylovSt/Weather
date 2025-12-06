@@ -1,19 +1,19 @@
 package com.weather.config;
 
-import jakarta.validation.Validator;
+import com.weather.service.SessionService;
+import com.weather.util.SessionInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -27,12 +27,18 @@ import javax.sql.DataSource;
 @ComponentScan("com.weather")
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
+
 public class SpringConfig implements WebMvcConfigurer {
+
     private final ApplicationContext applicationContext;
 
+    private final SessionInterceptor sessionInterceptor;
+
+
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext) {
+    public SpringConfig(ApplicationContext applicationContext, SessionInterceptor sessionInterceptor) {
         this.applicationContext = applicationContext;
+       this.sessionInterceptor = sessionInterceptor;
     }
 
     @Bean
@@ -99,4 +105,21 @@ public class SpringConfig implements WebMvcConfigurer {
         return new LocalValidatorFactoryBean();
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(sessionInterceptor)
+                .excludePathPatterns(
+                        "/sign-in",
+                        "/sign-up",
+                        "/sign-in-with-errors",
+                        "/sign-up-with-errors",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/error",
+                        "/",
+                        "/favicon.ico"
+                ).addPathPatterns("/**");
+        ;
+    }
 }

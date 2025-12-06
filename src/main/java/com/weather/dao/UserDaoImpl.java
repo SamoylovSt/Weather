@@ -21,7 +21,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findById(int id) {
-        return Optional.empty();
+        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.id=:username",
+                User.class);
+        query.setParameter("id",id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

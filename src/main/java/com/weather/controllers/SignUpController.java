@@ -35,10 +35,14 @@ public class SignUpController {
                                BindingResult bindingResult,
                                Model model,
                                HttpServletResponse response) {
+
+
+
         String username = form.getUsername();
         String sessionId = UUID.randomUUID().toString();
         Cookie cookie = new Cookie("session", sessionId);
-        // что ещё добавить в куку?
+        cookie.setPath("/");
+        cookie.setMaxAge(1*24*60);
         //TODO настроить удаление сессии по истечению
         if (bindingResult.hasErrors()) {
             ObjectError error = bindingResult.getAllErrors().get(0);
@@ -53,7 +57,7 @@ public class SignUpController {
             return "sign-up-with-errors";
         }
         response.addCookie(cookie);
-        userService.createUser(username, form.getPassword(), sessionId);//регистрацию в трайкетч?
+        userService.createUser(username, form.getPassword(), sessionId);
         return "sign-up";
     }
 }

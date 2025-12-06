@@ -1,16 +1,12 @@
 package com.weather.service;
 
-import com.weather.dao.SessionDao;
 import com.weather.dao.UserDao;
-import com.weather.entity.Session;
 import com.weather.entity.User;
-import com.weather.util.BCyptPasswordEncoder;
+import com.weather.util.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -20,7 +16,7 @@ public class UserService {
     private SessionService sessionService;
 
     @Autowired
-    private BCyptPasswordEncoder encoder;
+    private BCryptPasswordEncoder encoder;
 
     public void save(User user) {
         userDao.save(user);
@@ -44,11 +40,22 @@ public class UserService {
 
     public boolean authenticate(String name, String password) {
         Optional<User> userOptional = userDao.findByUsername(name);
-        User user = userOptional.get();
         if (!userOptional.isPresent()) {
             return false;
         }
+        User user = userOptional.get();
         return encoder.matches(password, user.getPassword());
+    }
+
+    public User findByUsername(String name) {
+        Optional<User> userOptional = userDao.findByUsername(name);
+        User user = userOptional.get();
+        return user;
+    }
+    public User findById(int id){
+        Optional<User> userOptional = userDao.findById(id);
+        User user = userOptional.get();
+        return user;
     }
 
 }
