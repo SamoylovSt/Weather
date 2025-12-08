@@ -13,11 +13,8 @@ import java.util.UUID;
 
 @Service
 public class SessionService {
-
     @Autowired
     private SessionDao sessionDao;
-
-
 
     public void createSession(User user, String sessionId) {
         LocalDate ld = (LocalDate.now()).plusDays(1);

@@ -17,7 +17,6 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     private SessionService sessionService;
 
-
     private static final String SESSION_COOKIE_NAME = "session";
 
     public boolean preHandle(HttpServletRequest request,

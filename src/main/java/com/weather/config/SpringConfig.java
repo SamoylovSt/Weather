@@ -120,6 +120,5 @@ public class SpringConfig implements WebMvcConfigurer {
                         "/",
                         "/favicon.ico"
                 ).addPathPatterns("/**");
-        ;
     }
 }

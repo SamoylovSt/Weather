@@ -1,7 +1,6 @@
 package com.weather.dao;
 
 import com.weather.entity.Session;
-import com.weather.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -22,7 +21,6 @@ public class SessionDao {
     public void save(Session session) {
         entityManager.persist(session);
     }
-
 
     public Optional<Session> findSession(String sessionId) {
         TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.id=:sessionId",
@@ -53,6 +51,5 @@ public class SessionDao {
         LocalDate now = LocalDate.now();
         LocalDate expireLocalDate = session.getExpiresAt();
         return now.isAfter(expireLocalDate);
-
     }
 }
