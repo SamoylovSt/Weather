@@ -1,5 +1,7 @@
 package com.weather.controllers;
 
+import com.weather.dto.LocationDTO;
+import com.weather.dto.WeatherDTO;
 import com.weather.service.OpenWeatherMapService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,9 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class SearchResultController {
@@ -20,20 +22,20 @@ public class SearchResultController {
     private OpenWeatherMapService openWeatherMapService;
 
     @GetMapping("/search-results")
-    public String showSearchResultPage(HttpServletRequest request,
-                                       HttpServletResponse response,
-                                       Model model) throws IOException {
-//TODO  сделать страницу поиска с таймлиф
-        openWeatherMapService.getWeatherByCity("moscow");
+    public String showSearchResultPage() {
 
         return "search-results";
     }
 
     @PostMapping("/search-results")
-    @ResponseBody
-    public String searchResult(@RequestParam("name") String city) {
+    public String searchResult(@RequestParam("name") String city,
+                               Model model) {
+//        WeatherDTO weatherDTO = openWeatherMapService.getWeatherByCity(city);
+//        System.out.println(weatherDTO);
+//        model.addAttribute("");
 
-        System.out.println(city);
+        List<LocationDTO> list = openWeatherMapService.searchWeatherByCity(city);
+        System.out.println(list);
         return "search-results";
     }
 
