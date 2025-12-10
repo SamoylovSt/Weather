@@ -1,10 +1,7 @@
 package com.weather.dao;
 
 import com.weather.entity.Session;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +20,7 @@ public class SessionDao {
     }
 
     public Optional<Session> findSession(String sessionId) {
+      //TODO вернуть Session
         TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.id=:sessionId",
                 Session.class);
         query.setParameter("sessionId", UUID.fromString(sessionId));
@@ -31,6 +29,8 @@ public class SessionDao {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
+        }catch (NonUniqueResultException e){
+            throw new IllegalStateException("multiple sessions found");
         }
     }
 

@@ -18,7 +18,6 @@ public class OpenWeatherMapService implements WeatherService {
     private final String URL_FOR_LOCATION_LIST = "http://api.openweathermap.org/geo/1.0/direct";
     private final String LIMIT = "5";
 
-
     @Override
     public WeatherDTO getWeatherByCity(String city) {
         RestTemplate restTemplate = new RestTemplate();
@@ -28,12 +27,11 @@ public class OpenWeatherMapService implements WeatherService {
         return weatherDTO;
     }
 
-
     @Override
-    public LocationDTO getWeatherByCoordinates(double latitude, double longitude) {
+    public WeatherDTO getWeatherByCoordinates(double latitude, double longitude) {
         RestTemplate restTemplate = new RestTemplate();
         String url = String.format("%s?lat=%s&lon=%s&appid=%s", URL, latitude, longitude, APY_KEY);
-        LocationDTO result=restTemplate.getForObject(url, LocationDTO.class);
+        WeatherDTO result = restTemplate.getForObject(url, WeatherDTO.class);
         return result;
     }
 
@@ -49,6 +47,5 @@ public class OpenWeatherMapService implements WeatherService {
         }
         return resultList;
     }
-
 
 }

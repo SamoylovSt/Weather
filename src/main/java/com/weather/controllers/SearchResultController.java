@@ -1,10 +1,13 @@
 package com.weather.controllers;
 
 import com.weather.dto.LocationDTO;
-import com.weather.dto.WeatherDTO;
+import com.weather.entity.Location;
+import com.weather.entity.User;
+import com.weather.service.LocationService;
 import com.weather.service.OpenWeatherMapService;
+import com.weather.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,30 +15,49 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class SearchResultController {
-
     @Autowired
     private OpenWeatherMapService openWeatherMapService;
+    @Autowired
+    private LocationService locationService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/search-results")
     public String showSearchResultPage() {
-
         return "search-results";
     }
 
     @PostMapping("/search-results")
     public String searchResult(@RequestParam("name") String city,
                                Model model) {
-//        WeatherDTO weatherDTO = openWeatherMapService.getWeatherByCity(city);
-//        System.out.println(weatherDTO);
-//        model.addAttribute("");
-
         List<LocationDTO> list = openWeatherMapService.searchWeatherByCity(city);
-        System.out.println(list);
+        if (list != null) {
+            model.addAttribute("locations", list);
+        }
+        return "search-results";
+    }
+
+    @PostMapping("/select-location")
+    public String selectLocation(@RequestParam("lat") double latitude,
+                                 @RequestParam("lon") double longitude,
+                                 @RequestParam("city") String city,
+                                 HttpServletRequest request) {
+        User user = userService.getCurrentUserFromRequest(request);
+        log.info("get user"+user);
+        Location location = new Location();
+        location.setName(city);
+        location.setLatitude(BigDecimal.valueOf(latitude));
+        location.setLongitude(BigDecimal.valueOf(longitude));
+        location.setUser(user);
+        locationService.save(location);
+        log.info("location saved"+ location);
+//перевод на индекс где оторажена эта локация
         return "search-results";
     }
 

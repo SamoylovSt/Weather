@@ -9,7 +9,7 @@ public interface WeatherService {
 
     WeatherDTO getWeatherByCity(String city);
 
-    LocationDTO getWeatherByCoordinates(double latitude, double longitude);
+    WeatherDTO getWeatherByCoordinates(double latitude, double longitude);
 
     List<LocationDTO> searchWeatherByCity(String city);
 }

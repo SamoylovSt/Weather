@@ -39,7 +39,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private String getSessionId(HttpServletRequest request) {
+    public String getSessionId(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {

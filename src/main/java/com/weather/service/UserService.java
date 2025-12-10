@@ -1,8 +1,11 @@
 package com.weather.service;
 
 import com.weather.dao.UserDao;
+import com.weather.entity.Session;
 import com.weather.entity.User;
 import com.weather.util.BCryptPasswordEncoder;
+import com.weather.util.SessionInterceptor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,8 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private SessionService sessionService;
-
+    @Autowired
+    private SessionInterceptor sessionInterceptor;
     @Autowired
     private BCryptPasswordEncoder encoder;
 
@@ -52,10 +56,18 @@ public class UserService {
         User user = userOptional.get();
         return user;
     }
-    public User findById(int id){
+
+    public User findById(int id) {
         Optional<User> userOptional = userDao.findById(id);
         User user = userOptional.get();
         return user;
+    }
+
+    public User getCurrentUserFromRequest(HttpServletRequest request) {
+        String sessionId = sessionInterceptor.getSessionId(request);
+        Optional<Session> sessionOpt = sessionService.findSession(sessionId);
+        Session currentSession = sessionOpt.get();
+        return findById(currentSession.getUser().getId());
     }
 
 }

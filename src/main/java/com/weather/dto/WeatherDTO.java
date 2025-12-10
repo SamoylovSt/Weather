@@ -10,17 +10,10 @@ import java.util.Map;
 public class WeatherDTO {
 
     private String city;
-
     private double temperature;
-
-
     private double feelsLike;
-
     private int humidity;
-
     private String description;
-
-
     private String country;
 
     public WeatherDTO() {
