@@ -20,16 +20,15 @@ public class SessionDao {
     }
 
     public Optional<Session> findSession(String sessionId) {
-      //TODO вернуть Session
+        //TODO вернуть Session
         TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.id=:sessionId",
                 Session.class);
         query.setParameter("sessionId", UUID.fromString(sessionId));
         try {
-            System.out.println("session found");
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
-        }catch (NonUniqueResultException e){
+        } catch (NonUniqueResultException e) {
             throw new IllegalStateException("multiple sessions found");
         }
     }
@@ -38,7 +37,11 @@ public class SessionDao {
         return findSession(sessionId).isPresent();
     }
 
-    public void deleteSession(Session session) {
+    @Transactional
+    public void deleteSession(String sessionId) {
+        Optional<Session> sessionOpt= findSession(sessionId);
+        Session session =sessionOpt.get();
+        System.out.println(session+"  session from BD");
         entityManager.remove(session);
     }
 

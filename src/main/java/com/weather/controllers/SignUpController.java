@@ -22,8 +22,6 @@ import java.util.UUID;
 public class SignUpController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private SessionService sessionService;
 
     @GetMapping("/sign-up")
     public String showSignup() {
@@ -39,7 +37,7 @@ public class SignUpController {
         String sessionId = UUID.randomUUID().toString();
         Cookie cookie = new Cookie("session", sessionId);
         cookie.setPath("/");
-        cookie.setMaxAge(1*24*60);
+        cookie.setMaxAge(1 * 24 * 60);
         if (bindingResult.hasErrors()) {
             ObjectError error = bindingResult.getAllErrors().get(0);
             if (error != null) {

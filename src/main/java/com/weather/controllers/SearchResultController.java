@@ -49,16 +49,15 @@ public class SearchResultController {
                                  @RequestParam("city") String city,
                                  HttpServletRequest request) {
         User user = userService.getCurrentUserFromRequest(request);
-        log.info("get user"+user);
+        log.info("get user" + user);
         Location location = new Location();
         location.setName(city);
         location.setLatitude(BigDecimal.valueOf(latitude));
         location.setLongitude(BigDecimal.valueOf(longitude));
         location.setUser(user);
         locationService.save(location);
-        log.info("location saved"+ location);
-//перевод на индекс где оторажена эта локация
-        return "search-results";
+        log.info("location saved" + location);
+        return "redirect:/index";
     }
 
 }

@@ -37,8 +37,8 @@ public class SessionService {
         return sessionDao.isSessionExpired(sessionId);
     }
 
-    public void deleteSession(Session session) {
-        sessionDao.deleteSession(session);
+    public void deleteSession(String sessionId) {
+        sessionDao.deleteSession(sessionId);
     }
 
 }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,17 +24,12 @@ public class IndexController {
     @GetMapping("/index")
     public String showIndexPage(HttpServletRequest request,
                                 Model model) {
-
         User currentUser = userService.getCurrentUserFromRequest(request);
-
         List<Location> list = locationService.getLocationsForCurrentUser(currentUser.getId());
         System.out.println(list);
         List<WeatherDTO> weatherList = locationService.getLocationListForIndex(list);
         System.out.println(weatherList);
-
         model.addAttribute("weatherList", weatherList);
-        //лист с локациями я получил, надо разобраться с фронтом и динамической иконкой
-
         return "index";
     }
 

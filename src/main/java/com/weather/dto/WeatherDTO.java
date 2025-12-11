@@ -15,6 +15,7 @@ public class WeatherDTO {
     private int humidity;
     private String description;
     private String country;
+    private String icon;
 
     public WeatherDTO() {
     }
@@ -44,7 +45,9 @@ public class WeatherDTO {
     }
 
     public double getFeelsLike() {
-        return feelsLike;
+        double c=0;
+        c=feelsLike-273.15;
+        return c;
     }
 
     public void setFeelsLike(double feelsLike) {
@@ -52,16 +55,26 @@ public class WeatherDTO {
     }
 
     public double getTemperature() {
-        return temperature;
+        double c=0;
+        c=temperature-273.15;
+        return c;
     }
 
     public void setTemperature(double temperature) {
+
         this.temperature = temperature;
     }
 
     public String getCity() {
         return city;
     }
+
+    public String getIcon() {return icon;}
+
+    public void setIcon() {
+        this.icon = icon.toString();
+    }
+
 
     @JsonSetter("name")
     public void setCity(String city) {
@@ -96,6 +109,13 @@ public class WeatherDTO {
                 this.description = desc.toString();
             }
         }
+        if (firstWeather.containsKey("icon")) {
+            Object icon = firstWeather.get("icon");
+            if (icon != null) {
+                this.icon = icon.toString();
+            }
+        }
+
     }
 
     @JsonSetter("sys")
