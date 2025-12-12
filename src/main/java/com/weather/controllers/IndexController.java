@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -31,6 +33,15 @@ public class IndexController {
         System.out.println(weatherList);
         model.addAttribute("weatherList", weatherList);
         return "index";
+    }
+
+    @PostMapping("/delete-location")
+    public String deleteLocation(@RequestParam("city") String city) {
+        System.out.println(city + " CITY");
+        Location location = locationService.findLocationByCity(city);
+        System.out.println(location + " location found");
+        locationService.deleteLocation(city.split(" ")[0]);
+        return "redirect:/index";
     }
 
 }

@@ -17,5 +17,4 @@ public class LocationDTO {
     @JsonProperty("lon")
     private Double longitude;
     private String country;
-
 }

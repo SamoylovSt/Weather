@@ -1,6 +1,7 @@
 package com.weather.controllers;
 
 import com.weather.dto.LocationDTO;
+import com.weather.dto.WeatherDTO;
 import com.weather.entity.Location;
 import com.weather.entity.User;
 import com.weather.service.LocationService;
@@ -48,15 +49,15 @@ public class SearchResultController {
                                  @RequestParam("lon") double longitude,
                                  @RequestParam("city") String city,
                                  HttpServletRequest request) {
+        WeatherDTO weatherByCoordinates = openWeatherMapService.getWeatherByCoordinates(latitude, longitude);
         User user = userService.getCurrentUserFromRequest(request);
-        log.info("get user" + user);
         Location location = new Location();
-        location.setName(city);
+        location.setName(weatherByCoordinates.getCity());
         location.setLatitude(BigDecimal.valueOf(latitude));
         location.setLongitude(BigDecimal.valueOf(longitude));
         location.setUser(user);
         locationService.save(location);
-        log.info("location saved" + location);
+        //TODO добавляет не имя локации а какую то хуиту
         return "redirect:/index";
     }
 

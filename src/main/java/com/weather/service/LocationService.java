@@ -34,4 +34,11 @@ public class LocationService {
         return resultList;
     }
 
+    public Location findLocationByCity(String city) {
+        return locationDao.findLocationByCity(city);
+    }
+    public void deleteLocation(String city){
+        locationDao.deleteLocation(city);
+    }
+
 }

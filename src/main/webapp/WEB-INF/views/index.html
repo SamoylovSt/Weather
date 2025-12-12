@@ -47,7 +47,10 @@
                         <div class="card h-100 position-relative weather-card">
                             <!-- Опционально: форма удаления -->
                             <div class="position-absolute weather-card-delete-form">
-                                <button class="btn-close" aria-label="Delete"></button>
+                                <form th:action="@{/delete-location(city=${weather.city}, country=${weather.country})}"
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn-close" aria-label="Delete"></button>
+                                </form>
                             </div>
 
                             <!-- Динамическая иконка -->

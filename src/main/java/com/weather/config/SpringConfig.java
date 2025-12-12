@@ -2,6 +2,7 @@ package com.weather.config;
 
 import com.weather.service.SessionService;
 import com.weather.util.SessionInterceptor;
+import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -38,7 +40,7 @@ public class SpringConfig implements WebMvcConfigurer {
     @Autowired
     public SpringConfig(ApplicationContext applicationContext, SessionInterceptor sessionInterceptor) {
         this.applicationContext = applicationContext;
-       this.sessionInterceptor = sessionInterceptor;
+        this.sessionInterceptor = sessionInterceptor;
     }
 
     @Bean
