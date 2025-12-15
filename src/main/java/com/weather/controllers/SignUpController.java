@@ -1,10 +1,8 @@
 package com.weather.controllers;
 
-import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.validation.RegistrationForm;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.UUID;
-
 
 @Controller
 public class SignUpController {
@@ -37,7 +34,7 @@ public class SignUpController {
         String sessionId = UUID.randomUUID().toString();
         Cookie cookie = new Cookie("session", sessionId);
         cookie.setPath("/");
-        cookie.setMaxAge(1 * 24 * 60);
+        cookie.setMaxAge(24 * 60 * 60);
         if (bindingResult.hasErrors()) {
             ObjectError error = bindingResult.getAllErrors().get(0);
             if (error != null) {

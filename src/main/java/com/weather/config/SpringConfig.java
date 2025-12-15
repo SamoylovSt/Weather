@@ -1,8 +1,7 @@
 package com.weather.config;
 
-import com.weather.service.SessionService;
 import com.weather.util.SessionInterceptor;
-import jakarta.servlet.Filter;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -70,11 +68,18 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+       // DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        HikariDataSource  dataSource= new HikariDataSource();
+        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+       // dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
         dataSource.setUsername("postgres");
         dataSource.setPassword("postgres");
         dataSource.setDriverClassName("org.postgresql.Driver");
+
+        dataSource.setMaximumPoolSize(20);
+        dataSource.setMinimumIdle(5);
+        dataSource.setConnectionTimeout(30000);
+        dataSource.setIdleTimeout(600000);
         return dataSource;
         //TODO поменять чтобы данные подставлялись из проперти
     }

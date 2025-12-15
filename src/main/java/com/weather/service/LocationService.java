@@ -26,9 +26,9 @@ public class LocationService {
 
     public List<WeatherDTO> getLocationListForIndex(List<Location> locations) {
         List<WeatherDTO> resultList = new ArrayList<>();
-        for (Location loc : locations) {
-            WeatherDTO temp = openWeatherMapService.getWeatherByCoordinates(loc.getLatitude().doubleValue(),
-                    loc.getLongitude().doubleValue());
+        for (Location location : locations) {
+            WeatherDTO temp = openWeatherMapService.getWeatherByCoordinates(location.getLatitude().doubleValue(),
+                    location.getLongitude().doubleValue());
             resultList.add(temp);
         }
         return resultList;
@@ -37,7 +37,8 @@ public class LocationService {
     public Location findLocationByCity(String city) {
         return locationDao.findLocationByCity(city);
     }
-    public void deleteLocation(String city){
+
+    public void deleteLocation(String city) {
         locationDao.deleteLocation(city);
     }
 

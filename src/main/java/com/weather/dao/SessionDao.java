@@ -2,6 +2,7 @@ package com.weather.dao;
 
 import com.weather.entity.Session;
 import jakarta.persistence.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,10 +10,13 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Repository
 public class SessionDao {
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final String FIND_SESSION = "SELECT s FROM Session s WHERE s.id=:sessionId";
 
     @Transactional
     public void save(Session session) {
@@ -21,7 +25,7 @@ public class SessionDao {
 
     public Optional<Session> findSession(String sessionId) {
         //TODO вернуть Session
-        TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.id=:sessionId",
+        TypedQuery<Session> query = entityManager.createQuery(FIND_SESSION,
                 Session.class);
         query.setParameter("sessionId", UUID.fromString(sessionId));
         try {
@@ -39,9 +43,9 @@ public class SessionDao {
 
     @Transactional
     public void deleteSession(String sessionId) {
-        Optional<Session> sessionOpt= findSession(sessionId);
-        Session session =sessionOpt.get();
-        System.out.println(session+"  session from BD");
+        Optional<Session> sessionOpt = findSession(sessionId);
+        Session session = sessionOpt.get();
+        log.info(session + "  session from BD");
         entityManager.remove(session);
     }
 

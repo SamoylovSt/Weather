@@ -1,5 +1,4 @@
 <configuration>
-    <!-- ЗАМЕНИТЕ на ваш реальный путь -->
     <property name="LOG_DIR" value="./logs" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

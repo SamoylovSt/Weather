@@ -13,6 +13,8 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final String FIND_USER_BY_USERNAME="SELECT u FROM User u WHERE u.login=:username";
+    private final String FIND_USER_BY_ID="SELECT u FROM User u WHERE u.id=:id";
     @Override
     @Transactional
     public void save(User user) {
@@ -21,7 +23,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findById(int id) {
-        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.id=:id",
+        TypedQuery<User> query = entityManager.createQuery(FIND_USER_BY_ID,
                 User.class);
         query.setParameter("id",id);
         try {
@@ -33,7 +35,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.login=:username",
+        TypedQuery<User> query = entityManager.createQuery(FIND_USER_BY_USERNAME,
                 User.class);
         query.setParameter("username", username);
         try {

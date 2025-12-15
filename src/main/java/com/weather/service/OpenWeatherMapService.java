@@ -32,6 +32,7 @@ public class OpenWeatherMapService implements WeatherService {
         RestTemplate restTemplate = new RestTemplate();
         String url = String.format("%s?lat=%s&lon=%s&appid=%s", URL, latitude, longitude, APY_KEY);
         WeatherDTO result = restTemplate.getForObject(url, WeatherDTO.class);
+        //коректный город с реверсом
         return result;
     }
 

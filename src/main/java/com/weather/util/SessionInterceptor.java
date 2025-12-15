@@ -25,7 +25,6 @@ public class SessionInterceptor implements HandlerInterceptor {
         if (sessionService == null) {
             sessionService = applicationContext.getBean(SessionService.class);
         }
-
         String sessionId = getSessionId(request);
         if (sessionId == null) {
             response.sendRedirect("/sign-in");
@@ -33,6 +32,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         }
         if (sessionService.isSessionExpired(sessionId)) {
             removeSessionCookie(request, response);
+            sessionService.deleteSession(sessionId);
             response.sendRedirect("/sign-in");
             return false;
         }

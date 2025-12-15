@@ -38,7 +38,7 @@ public class SignInController {
         String sessionId = UUID.randomUUID().toString();
         Cookie cookie = new Cookie("session", sessionId);
         cookie.setPath("/");
-        cookie.setMaxAge(1 * 24 * 60);
+        cookie.setMaxAge(24 * 60 * 60);
         sessionService.createSession(userService.findByUsername(username), sessionId);
         response.addCookie(cookie);
         return "redirect:/index";

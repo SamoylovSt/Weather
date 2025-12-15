@@ -47,7 +47,6 @@ public class SearchResultController {
     @PostMapping("/select-location")
     public String selectLocation(@RequestParam("lat") double latitude,
                                  @RequestParam("lon") double longitude,
-                                 @RequestParam("city") String city,
                                  HttpServletRequest request) {
         WeatherDTO weatherByCoordinates = openWeatherMapService.getWeatherByCoordinates(latitude, longitude);
         User user = userService.getCurrentUserFromRequest(request);
@@ -57,7 +56,6 @@ public class SearchResultController {
         location.setLongitude(BigDecimal.valueOf(longitude));
         location.setUser(user);
         locationService.save(location);
-        //TODO добавляет не имя локации а какую то хуиту
         return "redirect:/index";
     }
 

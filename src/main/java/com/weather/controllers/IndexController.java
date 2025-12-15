@@ -6,6 +6,7 @@ import com.weather.entity.User;
 import com.weather.service.LocationService;
 import com.weather.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class IndexController {
     @Autowired
@@ -28,20 +30,18 @@ public class IndexController {
                                 Model model) {
         User currentUser = userService.getCurrentUserFromRequest(request);
         List<Location> list = locationService.getLocationsForCurrentUser(currentUser.getId());
-        System.out.println(list);
+        log.info(list + " list from getLocationsForCurrentUser");
         List<WeatherDTO> weatherList = locationService.getLocationListForIndex(list);
-        System.out.println(weatherList);
+        log.info(weatherList + " getLocationListForIndex");
         model.addAttribute("weatherList", weatherList);
         return "index";
     }
 
     @PostMapping("/delete-location")
     public String deleteLocation(@RequestParam("city") String city) {
-        System.out.println(city + " CITY");
         Location location = locationService.findLocationByCity(city);
-        System.out.println(location + " location found");
+        log.info(location + " location found");
         locationService.deleteLocation(city.split(" ")[0]);
         return "redirect:/index";
     }
-
 }

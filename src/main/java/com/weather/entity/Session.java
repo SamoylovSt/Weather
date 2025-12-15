@@ -21,8 +21,9 @@ public class Session {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user; // сделать уникальным
+    @JoinColumn(name = "user_id", referencedColumnName = "id" )
+    private User user; // TODO сделать уникальным?
+
     @Column(name = "expires_at")
     private LocalDate expiresAt;
 }

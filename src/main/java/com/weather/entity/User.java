@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-//@ToString(exclude = "passwordHash")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
