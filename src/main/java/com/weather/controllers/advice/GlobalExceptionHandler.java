@@ -12,5 +12,4 @@ public class GlobalExceptionHandler {
         mav.setViewName("error");
         return mav;
     }
-
 }

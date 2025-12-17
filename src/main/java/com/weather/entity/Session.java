@@ -22,7 +22,7 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id" )
-    private User user; // TODO сделать уникальным?
+    private User user;
 
     @Column(name = "expires_at")
     private LocalDate expiresAt;

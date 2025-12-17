@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -64,47 +65,6 @@ public class SpringConfig implements WebMvcConfigurer {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
         registry.viewResolver(resolver);
-    }
-
-    @Bean
-    public DataSource dataSource() {
-       // DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        HikariDataSource  dataSource= new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
-       // dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres");
-        dataSource.setDriverClassName("org.postgresql.Driver");
-
-        dataSource.setMaximumPoolSize(20);
-        dataSource.setMinimumIdle(5);
-        dataSource.setConnectionTimeout(30000);
-        dataSource.setIdleTimeout(600000);
-        return dataSource;
-        //TODO поменять чтобы данные подставлялись из проперти
-    }
-
-    @Bean
-    public Flyway flyway(DataSource dataSource) {
-        Flyway flyway = Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .baselineOnMigrate(true)
-                .baselineVersion("0")
-                .validateOnMigrate(true)
-                .outOfOrder(false)
-                .cleanOnValidationError(false)
-                .load();
-
-        log.info("Запуск Flyway Migration...");
-        try {
-            flyway.migrate();
-            log.info("Миграции успешно выполнены");
-        } catch (Exception e) {
-            log.error("Ошибка выполнения миграций: {}", e.getMessage());
-            throw new RuntimeException("Ошибка миграции БД", e);
-        }
-        return flyway;
     }
 
     @Bean

@@ -18,10 +18,12 @@ public class LocationDao {
 
     private final String SELECT_LOCATIONS_FOR_CURRENT_USER = "SELECT l FROM Location l WHERE l.user.id =:userId";
     private final String FIND_LOCATION_BY_CITY = "SELECT l FROM Location l WHERE l.name LIKE '%' || :name || '%'";
+    private final String FIND_LOCATION_BY_CITY_AND_USER_ID = "SELECT l FROM Location l WHERE l.name LIKE '%' || :name || '%' AND l.user.id=:userId";
+    private final String SELECT_LOCATION_BY_LATITUDE_AND_USER_ID="SELECT l FROM Location l WHERE l.latitude =:latitude AND l.user.id=:userId";
 
     @Transactional
-    public void save(Location location) {
-        if (!existLocationByLatitude(location.getLatitude().doubleValue())) {
+    public void save(Location location, int userId) {
+        if (!existLocationByLatitudeAndUserId(location.getLatitude().doubleValue(), userId)) {
             entityManager.persist(location);
         }
     }
@@ -39,12 +41,26 @@ public class LocationDao {
         return results.get(0);
     }
 
-    public boolean existLocationByLatitude(double latitude) {
+    public Location findLocationByCityAndUserId(String name, int userId) {
+        TypedQuery<Location> query = entityManager.createQuery(FIND_LOCATION_BY_CITY_AND_USER_ID,
+                Location.class
+        );
+        query.setParameter("name", name);
+        query.setParameter("userId", userId);
+        List<Location> results = query.getResultList();
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
+    }
+
+    public boolean existLocationByLatitudeAndUserId(double latitude, int userId) {
         TypedQuery<Location> query = entityManager.createQuery(
-                "SELECT l FROM Location l WHERE l.latitude =:latitude",
+                SELECT_LOCATION_BY_LATITUDE_AND_USER_ID,
                 Location.class
         );
         query.setParameter("latitude", latitude);
+        query.setParameter("userId", userId);
         try {
             return Optional.of(query.getSingleResult()).isPresent();
         } catch (NoResultException e) {
@@ -62,8 +78,8 @@ public class LocationDao {
     }
 
     @Transactional
-    public void deleteLocation(String city) {
-        Location locationForDelete = findLocationByCity(city);
+    public void deleteLocation(String city, int currentUserId) {
+        Location locationForDelete = findLocationByCityAndUserId(city, currentUserId);
         if (locationForDelete != null) {
             entityManager.remove(locationForDelete);
         }

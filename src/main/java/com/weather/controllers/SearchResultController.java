@@ -47,15 +47,16 @@ public class SearchResultController {
     @PostMapping("/select-location")
     public String selectLocation(@RequestParam("lat") double latitude,
                                  @RequestParam("lon") double longitude,
+                                 @RequestParam("city") String city,
                                  HttpServletRequest request) {
-        WeatherDTO weatherByCoordinates = openWeatherMapService.getWeatherByCoordinates(latitude, longitude);
         User user = userService.getCurrentUserFromRequest(request);
         Location location = new Location();
-        location.setName(weatherByCoordinates.getCity());
+        location.setName(city);
         location.setLatitude(BigDecimal.valueOf(latitude));
         location.setLongitude(BigDecimal.valueOf(longitude));
         location.setUser(user);
-        locationService.save(location);
+        int userId = user.getId();
+        locationService.save(location,userId );
         return "redirect:/index";
     }
 

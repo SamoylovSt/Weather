@@ -15,5 +15,5 @@ public @interface PasswordMatch {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-//слава гпт!
+
 }

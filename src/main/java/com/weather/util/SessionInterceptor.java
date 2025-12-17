@@ -51,7 +51,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         return null;
     }
 
-    private void removeSessionCookie(HttpServletRequest request, HttpServletResponse response) {
+    public void removeSessionCookie(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = new Cookie(SESSION_COOKIE_NAME, "");
         cookie.setPath(request.getContextPath());
         cookie.setMaxAge(0);

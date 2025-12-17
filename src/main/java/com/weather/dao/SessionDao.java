@@ -24,7 +24,6 @@ public class SessionDao {
     }
 
     public Optional<Session> findSession(String sessionId) {
-        //TODO вернуть Session
         TypedQuery<Session> query = entityManager.createQuery(FIND_SESSION,
                 Session.class);
         query.setParameter("sessionId", UUID.fromString(sessionId));

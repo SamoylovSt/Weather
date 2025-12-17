@@ -33,15 +33,16 @@ public class IndexController {
         log.info(list + " list from getLocationsForCurrentUser");
         List<WeatherDTO> weatherList = locationService.getLocationListForIndex(list);
         log.info(weatherList + " getLocationListForIndex");
+        model.addAttribute("userName",currentUser.getLogin());
         model.addAttribute("weatherList", weatherList);
         return "index";
     }
 
     @PostMapping("/delete-location")
-    public String deleteLocation(@RequestParam("city") String city) {
-        Location location = locationService.findLocationByCity(city);
-        log.info(location + " location found");
-        locationService.deleteLocation(city.split(" ")[0]);
+    public String deleteLocation(@RequestParam("city") String city,
+                                 HttpServletRequest request) {
+        User user= userService.getCurrentUserFromRequest(request);
+        locationService.deleteLocation(city.split(" ")[0], user.getId());
         return "redirect:/index";
     }
 }

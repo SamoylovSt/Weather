@@ -22,10 +22,6 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    public void save(User user) {
-        userDao.save(user);
-    }
-
     public boolean existByUsername(String name) {
         return userDao.existByUsername(name);
     }

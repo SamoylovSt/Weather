@@ -49,6 +49,6 @@ public class SignUpController {
         }
         response.addCookie(cookie);
         userService.createUser(username, form.getPassword(), sessionId);
-        return "index";
+        return "redirect:/index";
     }
 }

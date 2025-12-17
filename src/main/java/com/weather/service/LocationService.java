@@ -16,8 +16,8 @@ public class LocationService {
     @Autowired
     private OpenWeatherMapService openWeatherMapService;
 
-    public void save(Location location) {
-        locationDao.save(location);
+    public void save(Location location,int userId) {
+        locationDao.save(location,userId);
     }
 
     public List<Location> getLocationsForCurrentUser(int userId) {
@@ -29,17 +29,15 @@ public class LocationService {
         for (Location location : locations) {
             WeatherDTO temp = openWeatherMapService.getWeatherByCoordinates(location.getLatitude().doubleValue(),
                     location.getLongitude().doubleValue());
+            temp.setCity(location.getName());
             resultList.add(temp);
         }
         return resultList;
     }
 
-    public Location findLocationByCity(String city) {
-        return locationDao.findLocationByCity(city);
-    }
+    public void deleteLocation(String city, int currentUserId) {
 
-    public void deleteLocation(String city) {
-        locationDao.deleteLocation(city);
+        locationDao.deleteLocation(city, currentUserId);
     }
 
 }

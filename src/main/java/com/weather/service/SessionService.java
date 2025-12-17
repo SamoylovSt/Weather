@@ -29,10 +29,6 @@ public class SessionService {
         return sessionDao.findSession(sessionId);
     }
 
-    public boolean existById(String sessionId) {
-        return sessionDao.existById(sessionId);
-    }
-
     public boolean isSessionExpired(String sessionId) {
         return sessionDao.isSessionExpired(sessionId);
     }

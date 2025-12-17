@@ -19,20 +19,10 @@ public class OpenWeatherMapService implements WeatherService {
     private final String LIMIT = "5";
 
     @Override
-    public WeatherDTO getWeatherByCity(String city) {
-        RestTemplate restTemplate = new RestTemplate();
-        String encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8);
-        String url = String.format("%s?q=%s&appid=%s", URL, encodedCity, APY_KEY);
-        WeatherDTO weatherDTO = restTemplate.getForObject(url, WeatherDTO.class);
-        return weatherDTO;
-    }
-
-    @Override
     public WeatherDTO getWeatherByCoordinates(double latitude, double longitude) {
         RestTemplate restTemplate = new RestTemplate();
         String url = String.format("%s?lat=%s&lon=%s&appid=%s", URL, latitude, longitude, APY_KEY);
         WeatherDTO result = restTemplate.getForObject(url, WeatherDTO.class);
-        //коректный город с реверсом
         return result;
     }
 
