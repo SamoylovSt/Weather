@@ -36,11 +36,14 @@ public class SearchResultController {
 
     @PostMapping("/search-results")
     public String searchResult(@RequestParam("name") String city,
-                               Model model) {
+                               Model model,
+                               HttpServletRequest request) {
         List<LocationDTO> list = openWeatherMapService.searchWeatherByCity(city);
         if (list != null) {
             model.addAttribute("locations", list);
         }
+        User currentUser = userService.getCurrentUserFromRequest(request);
+        model.addAttribute("userName", currentUser.getLogin());
         return "search-results";
     }
 
@@ -48,15 +51,16 @@ public class SearchResultController {
     public String selectLocation(@RequestParam("lat") double latitude,
                                  @RequestParam("lon") double longitude,
                                  @RequestParam("city") String city,
-                                 HttpServletRequest request) {
-        User user = userService.getCurrentUserFromRequest(request);
+                                 HttpServletRequest request,
+                                 Model model) {
+        User currentUser = userService.getCurrentUserFromRequest(request);
         Location location = new Location();
         location.setName(city);
         location.setLatitude(BigDecimal.valueOf(latitude));
         location.setLongitude(BigDecimal.valueOf(longitude));
-        location.setUser(user);
-        int userId = user.getId();
-        locationService.save(location,userId );
+        location.setUser(currentUser);
+        int userId = currentUser.getId();
+        locationService.save(location, userId);
         return "redirect:/index";
     }
 
