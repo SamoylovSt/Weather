@@ -64,6 +64,7 @@ public class LocationDao {
         try {
             return Optional.of(query.getSingleResult()).isPresent();
         } catch (NoResultException e) {
+
             return false;
         }
 

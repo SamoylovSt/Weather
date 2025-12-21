@@ -2,6 +2,7 @@ package com.weather.service;
 
 import com.weather.dto.LocationDTO;
 import com.weather.dto.WeatherDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,10 +13,12 @@ import java.util.List;
 
 @Service
 public class OpenWeatherMapService implements WeatherService {
-
-    private final String URL = "https://api.openweathermap.org/data/2.5/weather";
-    private final String APY_KEY = "5aca02bb848cd4b86a8bcb82945b4b76";
-    private final String URL_FOR_LOCATION_LIST = "http://api.openweathermap.org/geo/1.0/direct";
+    @Value("${open.weather.url}")
+    private String URL;
+    @Value("${open.weather.apy-key}")
+    private String APY_KEY;
+    @Value("${open.weather.url-for-location-list}")
+    private String URL_FOR_LOCATION_LIST;
     private final String LIMIT = "5";
 
     @Override
@@ -38,5 +41,4 @@ public class OpenWeatherMapService implements WeatherService {
         }
         return resultList;
     }
-
 }

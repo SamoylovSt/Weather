@@ -1,3 +1,5 @@
 logs
 application.properties
 .idea/
+target
+Weather.iml

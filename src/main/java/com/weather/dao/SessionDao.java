@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ public class SessionDao {
     private EntityManager entityManager;
 
     private final String FIND_SESSION = "SELECT s FROM Session s WHERE s.id=:sessionId";
+    private final String FIND_SESSION_IF_EXPIRED = "SELECT s FROM Session s WHERE s.expiresAt < :currentTime";
 
     @Transactional
     public void save(Session session) {
@@ -57,5 +60,23 @@ public class SessionDao {
         LocalDate now = LocalDate.now();
         LocalDate expireLocalDate = session.getExpiresAt();
         return now.isAfter(expireLocalDate);
+    }
+
+    public List<Session> findSessionIfExpired() {
+        TypedQuery<Session> query = entityManager.createQuery(FIND_SESSION_IF_EXPIRED,
+                Session.class);
+        query.setParameter("currentTime", LocalDate.now());
+        return query.getResultList();
+    }
+
+    @Transactional
+    public void deleteSessionIfExpired() {
+        List<Session> sessionsForDelete = findSessionIfExpired();
+        if (!sessionsForDelete.isEmpty()) {
+            Session sessionForDelete = sessionsForDelete.get(0);
+            entityManager.remove(sessionForDelete);
+        } else {
+            System.out.println("SESSION IS EMPTY");
+        }
     }
 }

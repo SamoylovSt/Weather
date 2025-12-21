@@ -6,6 +6,7 @@ import com.weather.entity.Location;
 import com.weather.entity.User;
 import com.weather.service.LocationService;
 import com.weather.service.OpenWeatherMapService;
+import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +52,7 @@ public class SearchResultController {
     public String selectLocation(@RequestParam("lat") double latitude,
                                  @RequestParam("lon") double longitude,
                                  @RequestParam("city") String city,
-                                 HttpServletRequest request,
-                                 Model model) {
+                                 HttpServletRequest request) {
         User currentUser = userService.getCurrentUserFromRequest(request);
         Location location = new Location();
         location.setName(city);

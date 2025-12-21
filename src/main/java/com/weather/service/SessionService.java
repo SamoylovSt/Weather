@@ -7,6 +7,7 @@ import com.weather.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +36,10 @@ public class SessionService {
 
     public void deleteSession(String sessionId) {
         sessionDao.deleteSession(sessionId);
+    }
+
+    public void deleteSessionIfExpired() {
+       sessionDao.deleteSessionIfExpired();
     }
 
 }

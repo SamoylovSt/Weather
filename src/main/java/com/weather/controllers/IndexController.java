@@ -4,6 +4,7 @@ import com.weather.dto.WeatherDTO;
 import com.weather.entity.Location;
 import com.weather.entity.User;
 import com.weather.service.LocationService;
+import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -33,15 +34,16 @@ public class IndexController {
         log.info(list + " list from getLocationsForCurrentUser");
         List<WeatherDTO> weatherList = locationService.getLocationListForIndex(list);
         log.info(weatherList + " getLocationListForIndex");
-        model.addAttribute("userName",currentUser.getLogin());
+        model.addAttribute("userName", currentUser.getLogin());
         model.addAttribute("weatherList", weatherList);
+
         return "index";
     }
 
     @PostMapping("/delete-location")
     public String deleteLocation(@RequestParam("city") String city,
                                  HttpServletRequest request) {
-        User user= userService.getCurrentUserFromRequest(request);
+        User user = userService.getCurrentUserFromRequest(request);
         locationService.deleteLocation(city.split(" ")[0], user.getId());
         return "redirect:/index";
     }

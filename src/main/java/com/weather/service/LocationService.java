@@ -36,7 +36,6 @@ public class LocationService {
     }
 
     public void deleteLocation(String city, int currentUserId) {
-
         locationDao.deleteLocation(city, currentUserId);
     }
 
