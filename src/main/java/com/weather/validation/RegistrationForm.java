@@ -3,7 +3,6 @@ package com.weather.validation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@PasswordMatch
 public class RegistrationForm {
 
     @NotBlank(message = "The user name cannot be empty.")

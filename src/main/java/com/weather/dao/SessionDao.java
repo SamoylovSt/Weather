@@ -1,6 +1,7 @@
 package com.weather.dao;
 
 import com.weather.entity.Session;
+import com.weather.exception.PersistException;
 import jakarta.persistence.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -22,8 +23,12 @@ public class SessionDao {
     private final String FIND_SESSION_IF_EXPIRED = "SELECT s FROM Session s WHERE s.expiresAt < :currentTime";
 
     @Transactional
-    public void save(Session session) {
-        entityManager.persist(session);
+    public Session save(Session session) {
+        try {
+            return entityManager.merge(session);
+        } catch (Exception e) {
+            throw new PersistException("Session saving error");
+        }
     }
 
     public Optional<Session> findSession(String sessionId) {
@@ -39,9 +44,6 @@ public class SessionDao {
         }
     }
 
-    public boolean existById(String sessionId) {
-        return findSession(sessionId).isPresent();
-    }
 
     @Transactional
     public void deleteSession(String sessionId) {
@@ -57,15 +59,15 @@ public class SessionDao {
             return true;
         }
         Session session = sessionOptional.get();
-        LocalDate now = LocalDate.now();
-        LocalDate expireLocalDate = session.getExpiresAt();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expireLocalDate = session.getExpiresAt();
         return now.isAfter(expireLocalDate);
     }
 
     public List<Session> findSessionIfExpired() {
         TypedQuery<Session> query = entityManager.createQuery(FIND_SESSION_IF_EXPIRED,
                 Session.class);
-        query.setParameter("currentTime", LocalDate.now());
+        query.setParameter("currentTime", LocalDateTime.now());
         return query.getResultList();
     }
 

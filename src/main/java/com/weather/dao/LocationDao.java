@@ -1,13 +1,16 @@
 package com.weather.dao;
 
 import com.weather.entity.Location;
+import com.weather.exception.PersistException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,26 +25,15 @@ public class LocationDao {
     private final String SELECT_LOCATION_BY_LATITUDE_AND_USER_ID="SELECT l FROM Location l WHERE l.latitude =:latitude AND l.user.id=:userId";
 
     @Transactional
-    public void save(Location location, int userId) {
-        if (!existLocationByLatitudeAndUserId(location.getLatitude().doubleValue(), userId)) {
-            entityManager.persist(location);
-        }
+    public void save(Location location, long userId) {
+           try {
+               entityManager.persist(location);
+           }catch (RuntimeException e){
+             throw new PersistException("Location saving error");
+           }
     }
 
-    public Location findLocationByCity(String name) {
-        TypedQuery<Location> query = entityManager.createQuery(
-                FIND_LOCATION_BY_CITY,
-                Location.class
-        );
-        query.setParameter("name", name);
-        List<Location> results = query.getResultList();
-        if (results.isEmpty()) {
-            return null;
-        }
-        return results.get(0);
-    }
-
-    public Location findLocationByCityAndUserId(String name, int userId) {
+    public Location findLocationByCityAndUserId(String name, long userId) {
         TypedQuery<Location> query = entityManager.createQuery(FIND_LOCATION_BY_CITY_AND_USER_ID,
                 Location.class
         );
@@ -54,24 +46,8 @@ public class LocationDao {
         return results.get(0);
     }
 
-    public boolean existLocationByLatitudeAndUserId(double latitude, int userId) {
-        TypedQuery<Location> query = entityManager.createQuery(
-                SELECT_LOCATION_BY_LATITUDE_AND_USER_ID,
-                Location.class
-        );
-        query.setParameter("latitude", latitude);
-        query.setParameter("userId", userId);
-        try {
-            return Optional.of(query.getSingleResult()).isPresent();
-        } catch (NoResultException e) {
-
-            return false;
-        }
-
-    }
-
     @Transactional
-    public List<Location> getLocationsForCurrentUser(int userId) {
+    public List<Location> getLocationsForCurrentUser(long userId) {
         TypedQuery<Location> query = entityManager.createQuery(SELECT_LOCATIONS_FOR_CURRENT_USER, Location.class);
         query.setParameter("userId", userId);
         List<Location> result = query.getResultList();
@@ -79,7 +55,7 @@ public class LocationDao {
     }
 
     @Transactional
-    public void deleteLocation(String city, int currentUserId) {
+    public void deleteLocation(String city, long currentUserId) {
         Location locationForDelete = findLocationByCityAndUserId(city, currentUserId);
         if (locationForDelete != null) {
             entityManager.remove(locationForDelete);

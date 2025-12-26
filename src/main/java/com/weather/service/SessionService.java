@@ -1,29 +1,26 @@
 package com.weather.service;
 
 import com.weather.dao.SessionDao;
-import com.weather.dao.UserDao;
 import com.weather.entity.Session;
 import com.weather.entity.User;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class SessionService {
     @Autowired
     private SessionDao sessionDao;
 
-    public void createSession(User user, String sessionId) {
-        LocalDate ld = (LocalDate.now()).plusDays(1);
+    public Session createSession(User user) {
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
         Session session = new Session();
-        session.setId(UUID.fromString(sessionId));
         session.setUser(user);
-        session.setExpiresAt(ld);
-        sessionDao.save(session);
+        session.setExpiresAt(localDateTime);
+        return sessionDao.save(session);
     }
 
     public Optional<Session> findSession(String sessionId) {
@@ -39,7 +36,14 @@ public class SessionService {
     }
 
     public void deleteSessionIfExpired() {
-       sessionDao.deleteSessionIfExpired();
+        sessionDao.deleteSessionIfExpired();
+    }
+
+    public Cookie createCookies(Session session) {
+        Cookie newCookie = new Cookie("session", session.getId().toString());
+        newCookie.setPath("/");
+        newCookie.setMaxAge(24 * 60 * 60);
+        return newCookie;
     }
 
 }

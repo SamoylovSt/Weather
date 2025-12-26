@@ -11,16 +11,20 @@ import java.util.List;
 
 @Service
 public class LocationService {
-    @Autowired
-    private LocationDao locationDao;
-    @Autowired
-    private OpenWeatherMapService openWeatherMapService;
 
-    public void save(Location location,int userId) {
-        locationDao.save(location,userId);
+    private final LocationDao locationDao;
+    private  final OpenWeatherMapService openWeatherMapService;
+
+    public LocationService(OpenWeatherMapService openWeatherMapService, LocationDao locationDao) {
+        this.openWeatherMapService = openWeatherMapService;
+        this.locationDao = locationDao;
     }
 
-    public List<Location> getLocationsForCurrentUser(int userId) {
+    public void save(Location location, long userId) {
+        locationDao.save(location, userId);
+    }
+
+    public List<Location> getLocationsForCurrentUser(long userId) {
         return locationDao.getLocationsForCurrentUser(userId);
     }
 
@@ -35,7 +39,7 @@ public class LocationService {
         return resultList;
     }
 
-    public void deleteLocation(String city, int currentUserId) {
+    public void deleteLocation(String city, long currentUserId) {
         locationDao.deleteLocation(city, currentUserId);
     }
 

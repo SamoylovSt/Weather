@@ -12,19 +12,17 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final SessionService sessionService;
 
-    private SessionService sessionService;
+    public SessionInterceptor(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     private static final String SESSION_COOKIE_NAME = "session";
 
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws Exception {
-        if (sessionService == null) {
-            sessionService = applicationContext.getBean(SessionService.class);
-        }
         String sessionId = getSessionId(request);
         if (sessionId == null) {
             response.sendRedirect("/sign-in");

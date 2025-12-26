@@ -1,5 +1,6 @@
 package com.weather.controllers;
 
+import com.weather.entity.Session;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -30,16 +31,12 @@ public class SignInController {
     @PostMapping("/sign-in")
     public String signIn(@RequestParam("username") String username,
                          @RequestParam("password") String password,
-                         HttpServletRequest request,
                          HttpServletResponse response) {
         if (!userService.authenticate(username, password)) {
             return "sign-in-with-errors";
         }
-        String sessionId = UUID.randomUUID().toString();
-        Cookie cookie = new Cookie("session", sessionId);
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
-        sessionService.createSession(userService.findByUsername(username), sessionId);
+        Session session = sessionService.createSession(userService.findByUsername(username));
+        Cookie cookie = sessionService.createCookies(session);
         response.addCookie(cookie);
         return "redirect:/index";
     }

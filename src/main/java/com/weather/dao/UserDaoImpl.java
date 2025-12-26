@@ -1,6 +1,7 @@
 package com.weather.dao;
 
 import com.weather.entity.User;
+import com.weather.exception.PersistException;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,19 +14,24 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final String FIND_USER_BY_USERNAME="SELECT u FROM User u WHERE u.login=:username";
-    private final String FIND_USER_BY_ID="SELECT u FROM User u WHERE u.id=:id";
+    private final String FIND_USER_BY_USERNAME = "SELECT u FROM User u WHERE u.login=:username";
+    private final String FIND_USER_BY_ID = "SELECT u FROM User u WHERE u.id=:id";
+
     @Override
     @Transactional
     public void save(User user) {
-        entityManager.persist(user);
+        try {
+            entityManager.persist(user);
+        } catch (Exception e) {
+            throw new PersistException("Location saving error");
+        }
     }
 
     @Override
-    public Optional<User> findById(int id) {
+    public Optional<User> findById(long id) {
         TypedQuery<User> query = entityManager.createQuery(FIND_USER_BY_ID,
                 User.class);
-        query.setParameter("id",id);
+        query.setParameter("id", id);
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {

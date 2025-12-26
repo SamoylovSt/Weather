@@ -59,7 +59,7 @@ public class SearchResultController {
         location.setLatitude(BigDecimal.valueOf(latitude));
         location.setLongitude(BigDecimal.valueOf(longitude));
         location.setUser(currentUser);
-        int userId = currentUser.getId();
+        long userId = currentUser.getId();
         locationService.save(location, userId);
         return "redirect:/index";
     }

@@ -24,7 +24,7 @@ public class OpenWeatherMapService implements WeatherService {
     @Override
     public WeatherDTO getWeatherByCoordinates(double latitude, double longitude) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = String.format("%s?lat=%s&lon=%s&appid=%s", URL, latitude, longitude, APY_KEY);
+        String url = String.format("%s?lat=%s&lon=%s&appid=%s&units=metric", URL, latitude, longitude, APY_KEY);
         WeatherDTO result = restTemplate.getForObject(url, WeatherDTO.class);
         return result;
     }

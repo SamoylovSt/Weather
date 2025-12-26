@@ -3,6 +3,7 @@ package com.weather.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -10,8 +11,9 @@ import java.util.Map;
 public class WeatherDTO {
 
     private String city;
-    private double temperature;
-    private double feelsLike;
+
+    private BigDecimal temperature;
+    private BigDecimal feelsLike;
     private int humidity;
     private String description;
     private String country;
@@ -44,24 +46,19 @@ public class WeatherDTO {
         this.humidity = humidity;
     }
 
-    public double getFeelsLike() {
-        double c=0;
-        c=feelsLike-273.15;
-        return c;
+    public BigDecimal getFeelsLike() {
+        return this.feelsLike;
     }
 
-    public void setFeelsLike(double feelsLike) {
+    public void setFeelsLike(BigDecimal feelsLike) {
         this.feelsLike = feelsLike;
     }
 
-    public double getTemperature() {
-        double c=0;
-        c=temperature-273.15;
-        return c;
+    public BigDecimal getTemperature() {
+        return this.temperature;
     }
 
-    public void setTemperature(double temperature) {
-
+    public void setTemperature(BigDecimal temperature) {
         this.temperature = temperature;
     }
 
@@ -69,7 +66,9 @@ public class WeatherDTO {
         return city;
     }
 
-    public String getIcon() {return icon;}
+    public String getIcon() {
+        return icon;
+    }
 
     public void setIcon() {
         this.icon = icon.toString();
@@ -87,10 +86,10 @@ public class WeatherDTO {
             return;
         }
         if (main.containsKey("temp")) {
-            this.temperature = ((Number) main.get("temp")).doubleValue();
+            this.temperature = BigDecimal.valueOf((Double) main.get("temp"));
         }
         if (main.containsKey("feels_like")) {
-            this.feelsLike = ((Number) main.get("feels_like")).doubleValue();
+            this.feelsLike = BigDecimal.valueOf((Double) main.get("feels_like"));
         }
         if (main.containsKey("humidity")) {
             this.humidity = ((Number) main.get("humidity")).intValue();
@@ -115,7 +114,6 @@ public class WeatherDTO {
                 this.icon = icon.toString();
             }
         }
-
     }
 
     @JsonSetter("sys")
@@ -126,7 +124,6 @@ public class WeatherDTO {
         if (sys.containsKey("country")) {
             this.country = sys.get("country").toString();
         }
-
     }
 
     @Override

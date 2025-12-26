@@ -9,23 +9,20 @@ import java.math.BigDecimal;
 @Table(name = "locations")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private int id;
-    @Column(name = "name", nullable = false, length = 30, unique = true)
+    private long id;
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    @Column(name = "latitude")
+    @Column(name = "latitude", precision = 9, scale = 6)
     private BigDecimal latitude;
-    @Column(name = "longitude")
+    @Column(name = "longitude", precision = 9, scale = 6)
     private BigDecimal longitude;
 }

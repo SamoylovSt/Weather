@@ -26,7 +26,7 @@ public class UserService {
         return userDao.existByUsername(name);
     }
 
-    public void createUser(String name, String password, String sessionId) {
+    public User createUser(String name, String password) {
         if (userDao.existByUsername(name)) {
             throw new RuntimeException("User already exist" + name);
         }
@@ -35,7 +35,8 @@ public class UserService {
         userForSave.setLogin(name);
         userForSave.setPassword(encodePassword);
         userDao.save(userForSave);
-        sessionService.createSession(userForSave, sessionId);
+        return findByUsername(name);
+        // sessionService.createSession(userForSave, sessionId);
     }
 
     public boolean authenticate(String name, String password) {
@@ -53,7 +54,7 @@ public class UserService {
         return user;
     }
 
-    public User findById(int id) {
+    public User findById(long id) {
         Optional<User> userOptional = userDao.findById(id);
         User user = userOptional.get();
         return user;

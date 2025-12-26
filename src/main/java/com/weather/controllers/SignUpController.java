@@ -1,5 +1,8 @@
 package com.weather.controllers;
 
+import com.weather.entity.Session;
+import com.weather.entity.User;
+import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.validation.RegistrationForm;
 import jakarta.servlet.http.Cookie;
@@ -13,12 +16,13 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.UUID;
 
 @Controller
 public class SignUpController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SessionService sessionService;
 
     @GetMapping("/sign-up")
     public String showSignup() {
@@ -31,10 +35,16 @@ public class SignUpController {
                                Model model,
                                HttpServletResponse response) {
         String username = form.getUsername();
-        String sessionId = UUID.randomUUID().toString();
-        Cookie cookie = new Cookie("session", sessionId);
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
+        if (!form.getPassword().equals(form.getRepeatPassword())) {
+            bindingResult.reject("errorMessage", "Passwords don't match");
+        }
+        if (userService.existByUsername(username)) {
+            model.addAttribute("errorMessage", "User already exist");
+            return "sign-up-with-errors";
+        }
+        User newUser = userService.createUser(username, form.getPassword());
+        Session newSession = sessionService.createSession(newUser);
+        Cookie cookie = sessionService.createCookies(newSession);
         if (bindingResult.hasErrors()) {
             ObjectError error = bindingResult.getAllErrors().get(0);
             if (error != null) {
@@ -43,12 +53,7 @@ public class SignUpController {
                 return "sign-up-with-errors";
             }
         }
-        if (userService.existByUsername(username)) {
-            model.addAttribute("errorMessage", "User already exist");
-            return "sign-up-with-errors";
-        }
         response.addCookie(cookie);
-        userService.createUser(username, form.getPassword(), sessionId);
         return "redirect:/index";
     }
 }
