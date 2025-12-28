@@ -40,6 +40,4 @@ public class SignInController {
         response.addCookie(cookie);
         return "redirect:/index";
     }
-
-
 }

@@ -30,7 +30,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         }
         if (sessionService.isSessionExpired(sessionId)) {
             removeSessionCookie(request, response);
-            sessionService.deleteSession(sessionId);
+            sessionService.deleteSession(sessionId);//можно не удалять?
             response.sendRedirect("/sign-in");
             return false;
         }

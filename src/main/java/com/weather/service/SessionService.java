@@ -35,10 +35,6 @@ public class SessionService {
         sessionDao.deleteSession(sessionId);
     }
 
-    public void deleteSessionIfExpired() {
-        sessionDao.deleteSessionIfExpired();
-    }
-
     public Cookie createCookies(Session session) {
         Cookie newCookie = new Cookie("session", session.getId().toString());
         newCookie.setPath("/");

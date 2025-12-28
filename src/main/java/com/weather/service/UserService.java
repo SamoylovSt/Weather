@@ -3,13 +3,15 @@ package com.weather.service;
 import com.weather.dao.UserDao;
 import com.weather.entity.Session;
 import com.weather.entity.User;
-import com.weather.util.BCryptPasswordEncoder;
 import com.weather.util.SessionInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.weather.util.BCryptPasswordEncoder.encode;
+import static com.weather.util.BCryptPasswordEncoder.matches;
 
 @Service
 public class UserService {
@@ -19,8 +21,6 @@ public class UserService {
     private SessionService sessionService;
     @Autowired
     private SessionInterceptor sessionInterceptor;
-    @Autowired
-    private BCryptPasswordEncoder encoder;
 
     public boolean existByUsername(String name) {
         return userDao.existByUsername(name);
@@ -30,13 +30,12 @@ public class UserService {
         if (userDao.existByUsername(name)) {
             throw new RuntimeException("User already exist" + name);
         }
-        String encodePassword = encoder.encode(password);
+        String encodePassword = encode(password);
         User userForSave = new User();
         userForSave.setLogin(name);
         userForSave.setPassword(encodePassword);
         userDao.save(userForSave);
         return findByUsername(name);
-        // sessionService.createSession(userForSave, sessionId);
     }
 
     public boolean authenticate(String name, String password) {
@@ -45,7 +44,7 @@ public class UserService {
             return false;
         }
         User user = userOptional.get();
-        return encoder.matches(password, user.getPassword());
+        return matches(password, user.getPassword());
     }
 
     public User findByUsername(String name) {

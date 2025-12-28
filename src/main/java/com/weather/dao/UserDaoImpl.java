@@ -1,13 +1,15 @@
 package com.weather.dao;
 
 import com.weather.entity.User;
+import com.weather.exception.NotFoundException;
 import com.weather.exception.PersistException;
 import jakarta.persistence.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
+@Slf4j
 @Repository
 public class UserDaoImpl implements UserDao {
 
@@ -22,8 +24,9 @@ public class UserDaoImpl implements UserDao {
     public void save(User user) {
         try {
             entityManager.persist(user);
-        } catch (Exception e) {
-            throw new PersistException("Location saving error");
+        } catch (PersistenceException e) {
+            log.error("Failed to persist user: {}"," User",e);
+            throw new PersistException(" user", e);
         }
     }
 
@@ -34,7 +37,7 @@ public class UserDaoImpl implements UserDao {
         query.setParameter("id", id);
         try {
             return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
+        } catch (NotFoundException e) {
             return Optional.empty();
         }
     }

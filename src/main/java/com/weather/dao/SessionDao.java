@@ -1,6 +1,8 @@
 package com.weather.dao;
 
 import com.weather.entity.Session;
+import com.weather.exception.AppException;
+import com.weather.exception.NotFoundException;
 import com.weather.exception.PersistException;
 import jakarta.persistence.*;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,8 +29,9 @@ public class SessionDao {
     public Session save(Session session) {
         try {
             return entityManager.merge(session);
-        } catch (Exception e) {
-            throw new PersistException("Session saving error");
+        } catch (PersistenceException e) {
+            log.error("Failed to persist session: {}"," session",e);
+            throw new PersistException("session", e);
         }
     }
 
@@ -47,10 +51,15 @@ public class SessionDao {
 
     @Transactional
     public void deleteSession(String sessionId) {
-        Optional<Session> sessionOpt = findSession(sessionId);
-        Session session = sessionOpt.get();
-        log.info(session + "  session from BD");
-        entityManager.remove(session);
+       try{
+           Optional<Session> sessionOpt = findSession(sessionId);
+           Session session = sessionOpt.get();
+           log.info(session + "  session from BD");
+           entityManager.remove(session);
+       }catch (NoSuchElementException e){
+          log.error("failed to find session for delete: {}", sessionId);
+           throw  new NotFoundException("session is not expired", e.getMessage());
+       }
     }
 
     public boolean isSessionExpired(String sessionId) {
